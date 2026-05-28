@@ -1,18 +1,38 @@
-version: '3.9'
+version: "3.9"
 
 services:
+  db:
+    image: mysql:8.0
+    container_name: mysql_db
+    restart: always
+    ports:
+      - "3307:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=Root_password123
+      - MYSQL_DATABASE=primemotors_db
+      - MYSQL_PASSWORD=mysql_password123
+    volumes:
+      - mysql_data:/var/lib/mysql
+
   backend:
     build:
-      context: ../backend
+      context: ../PrimeMotors-backend
     container_name: backend
     ports:
       - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=mysql://root:Root_password123@db:3306/primemotors_db
 
   frontend:
     build:
-      context: ../frontend
+      context: ../PrimeMotors-FrontEnd
     container_name: frontend
     ports:
       - "80:80"
     depends_on:
       - backend
+
+volumes:
+  mysql_data:
