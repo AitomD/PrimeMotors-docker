@@ -16,18 +16,18 @@ services:
 
   backend:
     build:
-      context: ../PrimeMotors-backend
+      context: ../backend
     container_name: backend
     ports:
       - "3000:3000"
     depends_on:
       - db
-    environment:
-      - DATABASE_URL=mysql://root:Root_password123@db:3306/primemotors_db
+    env_file:
+      - ../backend/.env
 
   frontend:
     build:
-      context: ../PrimeMotors-FrontEnd
+      context: ../frontend
     container_name: frontend
     ports:
       - "80:80"
