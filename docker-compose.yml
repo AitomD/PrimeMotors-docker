@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     image: mysql:8.0
@@ -17,7 +15,7 @@ services:
 
   backend:
     build:
-      context: ../backend
+      context: ../PrimeMotors-backend
     container_name: backend
     depends_on:
       - db
@@ -26,11 +24,11 @@ services:
     networks:
       - internal
     env_file:
-      - ../backend/.env
+      - ../PrimeMotors-backend/.env
 
   frontend:
     build:
-      context: ../frontend
+      context: ../PrimeMotors-FrontEnd
     container_name: frontend
     ports:
       - "80:80"
