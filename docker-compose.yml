@@ -15,7 +15,7 @@ services:
 
   backend:
     build:
-      context: ../PrimeMotors-backend
+      context: ../backend
     container_name: backend
     depends_on:
       - db
@@ -24,11 +24,11 @@ services:
     networks:
       - internal
     env_file:
-      - ../PrimeMotors-backend/.env
+      - ../backend/.env
 
   frontend:
     build:
-      context: ../PrimeMotors-FrontEnd
+      context: ../frontend
     container_name: frontend
     ports:
       - "80:80"
