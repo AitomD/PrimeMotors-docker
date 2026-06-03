@@ -10,25 +10,29 @@ services:
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
     networks:
       - internal
 
   backend:
     build:
-      context: ../backend
+      context: ../PrimeMotors-backend
     container_name: backend
     depends_on:
       - db
     environment:
       - DATABASE_URL=${DATABASE_URL}
+    ports:
+      - "3000:3000"
     networks:
       - internal
     env_file:
-      - ../backend/.env
+      - ../PrimeMotors-backend/.env
 
   frontend:
     build:
-      context: ../frontend
+      context: ../PrimeMotors-FrontEnd
     container_name: frontend
     ports:
       - "80:80"
