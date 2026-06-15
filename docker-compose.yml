@@ -19,23 +19,33 @@ services:
     depends_on:
       - db
     environment:
-      - DATABASE_URL=mysql://root:Root_password123@db:3306/primemotors_db
-    networks:
-      - internal
+      - DATABASE_URL=${DATABASE_URL}
     env_file:
       - ../PrimeMotors-backend/.env
+    networks:
+      - internal          
 
   frontend:
     build:
       context: ../PrimeMotors-FrontEnd
     container_name: frontend
+    depends_on:
+      - backend
+    networks:
+      - internal        
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
-    depends_on:
-      - backend
     volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./certs:/etc/nginx/ssl:ro
+    depends_on:
+      - frontend
+      - backend
     networks:
       - internal
 
