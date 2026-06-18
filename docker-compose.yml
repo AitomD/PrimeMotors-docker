@@ -11,40 +11,35 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - internal
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
 
   backend:
     build:
       context: ../PrimeMotors-backend
     container_name: backend
     depends_on:
-      - db
-    environment:
-      - DATABASE_URL=${DATABASE_URL}
+      db:
+        condition: service_healthy
     env_file:
       - ../PrimeMotors-backend/.env
     networks:
-      - internal          
+      - internal
 
   frontend:
     build:
       context: ../PrimeMotors-FrontEnd
     container_name: frontend
-    depends_on:
-      - backend
-    networks:
-      - internal        
-
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./certs:/etc/nginx/ssl:ro
+      - ./certs:/etc/nginx/ssl:ro   # certificados SSL
     depends_on:
-      - frontend
       - backend
     networks:
       - internal
