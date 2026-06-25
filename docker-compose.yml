@@ -11,20 +11,12 @@ services:
       - mysql_data:/var/lib/mysql
     networks:
       - internal
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pRoot_password123"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 30s
-
   backend:
     build:
       context: ../PrimeMotors-backend
     container_name: backend
     depends_on:
-      db:
-        condition: service_healthy
+      - db
     env_file:
       - ../PrimeMotors-backend/.env
     networks:
